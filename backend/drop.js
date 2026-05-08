@@ -1,11 +1,19 @@
+import 'dotenv/config';
 import pg from 'pg';
 
+const requiredEnvVars = ['DB_USERNAME', 'DB_PASSWORD', 'DB_NAME'];
+const missingEnvVars = requiredEnvVars.filter((key) => !process.env[key]);
+
+if (missingEnvVars.length > 0) {
+  throw new Error(`Missing required env vars: ${missingEnvVars.join(', ')}`);
+}
+
 const client = new pg.Client({
-  user: 'umang',
-  password: 'secret123',
-  host: 'localhost',
-  port: 5432,
-  database: 'crud_demo',
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST || 'localhost',
+  port: Number(process.env.DB_PORT || 5432),
+  database: process.env.DB_NAME,
 });
 
 async function run() {

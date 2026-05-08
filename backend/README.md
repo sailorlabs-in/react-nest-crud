@@ -16,6 +16,7 @@ For deep-dives, read the docs in order:
 | 3 | [Auth Module Deep Dive](./docs/03-auth-module.md) | JWT, Guards, Strategies, Custom Decorators |
 | 4 | [Todo Module Deep Dive](./docs/04-todo-module.md) | DTOs, Entities, TypeORM, User-Scoped CRUD |
 | 5 | [Cross-Module Sharing](./docs/05-cross-module-sharing.md) | How modules export/import features from each other |
+| 6 | [Environment Variables](./docs/06-environment-variables.md) | How secrets and runtime config are loaded safely |
 
 ---
 
@@ -45,8 +46,8 @@ For deep-dives, read the docs in order:
 ```sql
 -- Run in psql or pgAdmin
 CREATE DATABASE crud_demo;
-CREATE USER umang WITH PASSWORD 'secret123';
-GRANT ALL PRIVILEGES ON DATABASE crud_demo TO umang;
+CREATE USER your_database_user WITH PASSWORD 'your_database_password';
+GRANT ALL PRIVILEGES ON DATABASE crud_demo TO your_database_user;
 ```
 
 ### 2. Install Dependencies
@@ -56,22 +57,17 @@ cd backend
 npm install
 ```
 
-### 3. Configure Database
+### 3. Configure Environment Variables
 
-Open `src/app.module.ts` and update the TypeORM config:
+Copy the example env file:
 
-```typescript
-TypeOrmModule.forRoot({
-  type: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  username: 'your_username',   // ← change this
-  password: 'your_password',   // ← change this
-  database: 'crud_demo',
-  autoLoadEntities: true,
-  synchronize: true,           // ⚠️ dev only — auto-creates tables
-})
+```bash
+cp .env.example .env
 ```
+
+Then edit `.env` with your local PostgreSQL username, password, database name, JWT secret, and frontend URL.
+
+Never commit `.env`. Commit only `.env.example`.
 
 ### 4. Start the Server
 
@@ -134,6 +130,7 @@ backend/
 │   └── 05-cross-module-sharing.md
 │
 ├── nest-cli.json                  # NestJS CLI configuration
+├── .env.example                   # Safe env template (no real secrets)
 ├── tsconfig.json                  # TypeScript configuration
 └── package.json                   # Dependencies and scripts
 ```
@@ -183,3 +180,5 @@ backend/
 ## 📖 Read the Docs
 
 **New to NestJS?** Start with [Core NestJS Concepts →](./docs/01-nestjs-core-concepts.md)
+
+**New to env config?** Read [Environment Variables →](./docs/06-environment-variables.md)

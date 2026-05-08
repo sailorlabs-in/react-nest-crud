@@ -70,10 +70,10 @@ src/
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);  // create the app from root module
   app.setGlobalPrefix('api');                        // all routes: /api/...
-  app.enableCors({ origin: 'http://localhost:5001' });
+  app.enableCors({ origin: configService.get('FRONTEND_URL') });
   app.useGlobalPipes(new ValidationPipe({ ... }));   // validate all request bodies
   SwaggerModule.setup('api/docs', app, document);    // serve API docs at /api/docs
-  await app.listen(5000);
+  await app.listen(configService.get('PORT'));
 }
 bootstrap();
 ```
@@ -183,7 +183,7 @@ Configures the authentication feature. Sets up JWT and Passport:
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({ secret: '...', signOptions: { expiresIn: '24h' } }),
+    JwtModule.registerAsync({ inject: [ConfigService], useFactory: (...) }),
     TypeOrmModule.forFeature([User]),   // give AuthService access to the users table
   ],
   controllers: [AuthController],

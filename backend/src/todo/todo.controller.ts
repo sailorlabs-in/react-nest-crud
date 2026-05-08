@@ -71,7 +71,11 @@ export class TodoController {
    */
   @Post()
   @ApiOperation({ summary: 'Create a new todo' })
-  @ApiResponse({ status: 201, description: 'Todo created successfully', type: Todo })
+  @ApiResponse({
+    status: 201,
+    description: 'Todo created successfully',
+    type: Todo,
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   create(
     @Body() createTodoDto: CreateTodoDto,

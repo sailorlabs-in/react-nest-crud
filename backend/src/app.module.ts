@@ -23,6 +23,7 @@
  */
 
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
@@ -31,27 +32,35 @@ import { AuthModule } from './auth/auth.module.js';
 
 @Module({
   imports: [
+    // Loads variables from backend/.env and makes ConfigService available app-wide.
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+
     // Configure TypeORM with PostgreSQL connection
     // forRoot() = configure ONCE at the root level
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'umang',
-      password: 'secret123',
-      database: 'crud_demo',
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST', 'localhost'),
+        port: Number(configService.get<string>('DB_PORT', '5432')),
+        username: configService.getOrThrow<string>('DB_USERNAME'),
+        password: configService.getOrThrow<string>('DB_PASSWORD'),
+        database: configService.getOrThrow<string>('DB_NAME'),
 
-      // Auto-load all entity files (no need to list them manually)
-      autoLoadEntities: true,
+        // Auto-load all entity files (no need to list them manually)
+        autoLoadEntities: true,
 
-      // synchronize: true → TypeORM will auto-create/update database tables
-      // based on your entity definitions.
-      // ⚠️ WARNING: ONLY use this in development!
-      // In production, use migrations instead.
-      synchronize: true,
+        // synchronize: true → TypeORM will auto-create/update database tables
+        // based on your entity definitions.
+        // ⚠️ WARNING: ONLY use this in development!
+        // In production, use migrations instead.
+        synchronize: configService.get<string>('DB_SYNC', 'false') === 'true',
 
-      // Log SQL queries to console (helpful for learning)
-      // logging: true,
+        // Log SQL queries to console (helpful for learning)
+        logging: configService.get<string>('DB_LOGGING', 'false') === 'true',
+      }),
     }),
 
     // Import our feature modules

@@ -12,12 +12,14 @@
 
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module.js';
 
 async function bootstrap() {
   // 1. Create the NestJS application from the root module
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
 
   // 2. Set a global prefix — all routes will be under /api/*
   //    e.g., /api/todos, /api/todos/1
@@ -25,7 +27,7 @@ async function bootstrap() {
 
   // 3. Enable CORS so the React frontend can talk to this backend
   app.enableCors({
-    origin: 'http://localhost:5001', // React dev server port
+    origin: configService.get<string>('FRONTEND_URL', 'http://localhost:5001'),
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
@@ -53,11 +55,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  // 6. Start listening on port 3000
-  const port = process.env.PORT ?? 5000;
+  // 6. Start listening on the configured port
+  const port = Number(configService.get<string>('PORT', '5000'));
   await app.listen(port);
   console.log(`🚀 Server running on http://localhost:${port}`);
   console.log(`📖 Swagger docs at http://localhost:${port}/api/docs`);
 }
 
-bootstrap();
+void bootstrap();

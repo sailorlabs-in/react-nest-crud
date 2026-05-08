@@ -26,6 +26,7 @@
  */
 
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -46,6 +47,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    configService: ConfigService,
   ) {
     super({
       // Where to find the token in the request
@@ -55,8 +57,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
 
       // The secret key used to verify the token signature
-      // ⚠️ In production, use environment variables!
-      secretOrKey: 'super-secret-jwt-key-change-in-production',
+      secretOrKey: configService.getOrThrow<string>('JWT_SECRET'),
     });
   }
 

@@ -66,8 +66,8 @@ This is one of the most confusing parts for newcomers. Here's the distinction:
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      database: 'crud_demo',
+      host: configService.get('DB_HOST'),
+      database: configService.get('DB_NAME'),
       autoLoadEntities: true,
       synchronize: true,
     }),

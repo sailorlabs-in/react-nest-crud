@@ -167,8 +167,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       // ↑ expired tokens are rejected (false = don't ignore expiration)
 
-      secretOrKey: 'super-secret-jwt-key-change-in-production',
-      // ↑ same secret used to sign tokens — used to verify signature
+      secretOrKey: configService.getOrThrow<string>('JWT_SECRET'),
+      // ↑ same secret used to sign tokens — loaded from .env
     });
   }
 

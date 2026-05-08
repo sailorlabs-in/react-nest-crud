@@ -24,12 +24,17 @@
  */
 
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import type { Request } from 'express';
 import type { User } from '../../user/entities/user.entity.js';
+
+interface AuthenticatedRequest extends Request {
+  user: User;
+}
 
 export const GetUser = createParamDecorator(
   (_data: unknown, ctx: ExecutionContext): User => {
     // Extract the HTTP request from the execution context
-    const request = ctx.switchToHttp().getRequest();
+    const request = ctx.switchToHttp().getRequest<AuthenticatedRequest>();
 
     // Return the user object (attached by JwtAuthGuard + JwtStrategy)
     return request.user;

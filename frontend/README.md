@@ -20,6 +20,7 @@ Read these files in order if you are new to React:
 | 3 | [API Layer](./docs/03-api-layer.md) | Axios setup, auth token handling, API functions |
 | 4 | [Components & State Flow](./docs/04-components-state-flow.md) | How UI components talk to `App.tsx` |
 | 5 | [Auth & Todo Flow](./docs/05-auth-todo-flow.md) | Login, profile loading, CRUD flow |
+| 6 | [Environment Variables](./docs/06-environment-variables.md) | Vite env variables and frontend config |
 
 ## Tech Stack
 
@@ -62,7 +63,23 @@ If npm has cache permission issues on your machine, use a local cache:
 npm install --cache ./.npm-cache
 ```
 
-### 3. Start the frontend
+### 3. Configure environment variables
+
+Copy the safe template:
+
+```bash
+cp .env.example .env
+```
+
+The default local value is:
+
+```bash
+VITE_API_URL=http://localhost:5000/api
+```
+
+Only variables that start with `VITE_` are exposed to frontend code.
+
+### 4. Start the frontend
 
 ```bash
 npm run dev
@@ -71,10 +88,10 @@ npm run dev
 Vite will print a local URL, usually:
 
 ```bash
-http://localhost:5173
+http://localhost:5001
 ```
 
-### 4. Build for production
+### 5. Build for production
 
 ```bash
 npm run build
@@ -111,6 +128,7 @@ frontend/
 │   └── main.tsx               # React entry point
 │
 ├── docs/                      # Beginner guide
+├── .env.example               # Safe env template (no real secrets)
 ├── index.html                 # Vite HTML shell
 ├── vite.config.ts             # Vite config
 └── package.json               # Scripts and dependencies
@@ -129,6 +147,12 @@ export async function getTodos() {
 ```
 
 Components do not know the backend URL. They only receive handler functions from `App.tsx`.
+
+The backend URL comes from `VITE_API_URL`:
+
+```typescript
+const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000/api';
+```
 
 ## Authentication Summary
 
@@ -153,3 +177,7 @@ Components do not know the backend URL. They only receive handler functions from
 New to React? Start here:
 
 [React Core Concepts](./docs/01-react-core-concepts.md)
+
+New to frontend env variables? Read:
+
+[Environment Variables](./docs/06-environment-variables.md)

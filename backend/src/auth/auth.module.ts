@@ -25,9 +25,11 @@
  */
 
 import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import type { StringValue } from 'ms';
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 import { JwtStrategy } from './jwt.strategy.js';
@@ -39,10 +41,20 @@ import { User } from '../user/entities/user.entity.js';
     PassportModule.register({ defaultStrategy: 'jwt' }),
 
     // Configure JWT token settings
-    JwtModule.register({
-      secret: 'super-secret-jwt-key-change-in-production', // ⚠️ Use env vars in production!
-      signOptions: {
-        expiresIn: '24h', // Tokens expire after 24 hours
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const expiresIn = configService.get<string>('JWT_EXPIRES_IN', '24h');
+        const jwtExpiresIn = /^\d+$/.test(expiresIn)
+          ? Number(expiresIn)
+          : (expiresIn as StringValue);
+
+        return {
+          secret: configService.getOrThrow<string>('JWT_SECRET'),
+          signOptions: {
+            expiresIn: jwtExpiresIn,
+          },
+        };
       },
     }),
 

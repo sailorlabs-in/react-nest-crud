@@ -26,11 +26,11 @@ This is easier to read and easier to maintain.
 
 ```typescript
 export const apiClient = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:5000/api',
 });
 ```
 
-Because `baseURL` is set, other files can use short paths:
+Because `baseURL` comes from `.env`, local and production APIs can use different URLs without source-code edits. Other files can still use short paths:
 
 ```typescript
 apiClient.get('/todos');
