@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 /* ─── CSS Reset & Variables ─────────────────────────────── */
 *,
 *::before,
@@ -29,8 +31,6 @@
   --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 body {
   font-family: var(--font);
@@ -80,6 +80,10 @@ body {
   z-index: 1;
 }
 
+.auth-container {
+  max-width: 400px;
+}
+
 /* ─── Header ───────────────────────────────────────────── */
 .header {
   text-align: center;
@@ -120,11 +124,36 @@ body {
   margin-bottom: 16px;
 }
 
+.header-dashboard {
+  text-align: left;
+}
+
+.logo-spread {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.subtitle-left {
+  text-align: left;
+  margin-top: 4px;
+}
+
 /* ─── Stats ────────────────────────────────────────────── */
 .stats {
   display: flex;
   justify-content: center;
   gap: 20px;
+}
+
+.stats-left {
+  justify-content: flex-start;
+  margin-top: 24px;
 }
 
 .stat {
@@ -159,6 +188,12 @@ body {
 
 .create-form:focus-within {
   border-color: var(--border-focus);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .form-row {
@@ -215,6 +250,17 @@ body {
   white-space: nowrap;
 }
 
+.btn-full {
+  justify-content: center;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
 .btn-add {
   background: var(--accent);
   color: white;
@@ -255,6 +301,21 @@ body {
 .btn-cancel:hover {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text);
+}
+
+.auth-switch {
+  color: var(--text-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
 }
 
 /* ─── Todo List ────────────────────────────────────────── */
@@ -311,6 +372,12 @@ body {
   flex: 1;
   cursor: pointer;
   min-width: 0;
+  background: none;
+  border: none;
+  color: inherit;
+  font-family: var(--font);
+  padding: 0;
+  text-align: left;
 }
 
 .checkbox {
@@ -341,6 +408,7 @@ body {
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+  flex: 1;
 }
 
 .todo-title {
@@ -373,7 +441,7 @@ body {
 }
 
 .btn-icon-action {
-  width: 34px;
+  min-width: 44px;
   height: 34px;
   display: flex;
   align-items: center;
@@ -381,17 +449,22 @@ body {
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;
+  color: var(--text-muted);
   cursor: pointer;
-  font-size: 16px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
   transition: all var(--transition);
 }
 
 .btn-edit:hover {
   background: rgba(139, 92, 246, 0.15);
+  color: var(--accent-light);
 }
 
 .btn-delete:hover {
   background: var(--red-bg);
+  color: var(--red);
 }
 
 /* ─── Edit Form ────────────────────────────────────────── */

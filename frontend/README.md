@@ -1,75 +1,155 @@
-# React + TypeScript + Vite
+# React Todo App - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A beginner-friendly React + TypeScript frontend for the NestJS Todo API. This app lets users register, log in, manage todos, and stay authenticated with a JWT stored in `localStorage`.
 
-Currently, two official plugins are available:
+The code is intentionally split into small files:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `api/` contains every HTTP request.
+- `components/` contains reusable UI pieces.
+- `types/` contains shared TypeScript shapes.
+- `App.tsx` connects everything together.
 
-## React Compiler
+## Documentation Index
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+Read these files in order if you are new to React:
 
-Note: This will impact Vite dev & build performances.
+| # | File | What You Will Learn |
+|---|------|---------------------|
+| 1 | [React Core Concepts](./docs/01-react-core-concepts.md) | Components, JSX, props, state, effects |
+| 2 | [File & Folder Structure](./docs/02-file-structure.md) | What each frontend folder does |
+| 3 | [API Layer](./docs/03-api-layer.md) | Axios setup, auth token handling, API functions |
+| 4 | [Components & State Flow](./docs/04-components-state-flow.md) | How UI components talk to `App.tsx` |
+| 5 | [Auth & Todo Flow](./docs/05-auth-todo-flow.md) | Login, profile loading, CRUD flow |
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Technology | Purpose |
+|------------|---------|
+| React | Builds the user interface from components |
+| TypeScript | Adds type safety to React code |
+| Vite | Runs the dev server and builds the frontend |
+| Axios | Sends HTTP requests to the NestJS backend |
+| CSS | Styles the app |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Quick Start
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 1. Start the backend first
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+The frontend expects the backend API at:
+
+```bash
+http://localhost:5000/api
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+From the backend folder:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd ../backend
+npm install
+npm run start:dev
 ```
+
+### 2. Install frontend dependencies
+
+```bash
+cd ../frontend
+npm install
+```
+
+If npm has cache permission issues on your machine, use a local cache:
+
+```bash
+npm install --cache ./.npm-cache
+```
+
+### 3. Start the frontend
+
+```bash
+npm run dev
+```
+
+Vite will print a local URL, usually:
+
+```bash
+http://localhost:5173
+```
+
+### 4. Build for production
+
+```bash
+npm run build
+```
+
+This checks TypeScript and creates the production files in `dist/`.
+
+## Project Structure
+
+```text
+frontend/
+├── src/
+│   ├── api/
+│   │   ├── apiClient.ts       # Axios instance, token storage, error helper
+│   │   ├── authApi.ts         # login, register, getProfile
+│   │   └── todoApi.ts         # get, create, update, delete todos
+│   │
+│   ├── components/
+│   │   ├── AppBackground.tsx  # Shared page background wrapper
+│   │   ├── AuthForm.tsx       # Login/register form
+│   │   ├── EmptyState.tsx     # Loading and empty todo UI
+│   │   ├── ErrorBanner.tsx    # Reusable error message
+│   │   ├── TodoForm.tsx       # Create todo form
+│   │   ├── TodoHeader.tsx     # User greeting, stats, logout
+│   │   ├── TodoItem.tsx       # One todo card, edit/delete/toggle
+│   │   └── TodoList.tsx       # Renders all todos
+│   │
+│   ├── types/
+│   │   └── index.ts           # Todo, User, request/response types
+│   │
+│   ├── App.tsx                # Main state and event handlers
+│   ├── App.css                # App styles
+│   ├── index.css              # Global root styles
+│   └── main.tsx               # React entry point
+│
+├── docs/                      # Beginner guide
+├── index.html                 # Vite HTML shell
+├── vite.config.ts             # Vite config
+└── package.json               # Scripts and dependencies
+```
+
+## API Calls
+
+All API calls are separated from components.
+
+```typescript
+// src/api/todoApi.ts
+export async function getTodos() {
+  const response = await apiClient.get<Todo[]>('/todos');
+  return response.data;
+}
+```
+
+Components do not know the backend URL. They only receive handler functions from `App.tsx`.
+
+## Authentication Summary
+
+1. User submits `AuthForm`.
+2. `App.tsx` calls `login()` or `register()` from `authApi.ts`.
+3. Backend returns `{ accessToken, user }`.
+4. Token is saved in `localStorage`.
+5. Axios automatically adds `Authorization: Bearer <token>` to future requests.
+6. Todo requests now work because the backend can identify the logged-in user.
+
+## Useful Scripts
+
+| Command | What it does |
+|---------|--------------|
+| `npm run dev` | Starts the Vite development server |
+| `npm run build` | Type-checks and builds production files |
+| `npm run lint` | Runs ESLint |
+| `npm run preview` | Serves the production build locally |
+
+## Where to Start Reading
+
+New to React? Start here:
+
+[React Core Concepts](./docs/01-react-core-concepts.md)
