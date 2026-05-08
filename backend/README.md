@@ -1,98 +1,185 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🚀 NestJS Todo API — Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A full-stack **Todo CRUD** application backend built with **NestJS**, **TypeORM**, and **PostgreSQL**. This project is intentionally designed as a **learning reference** — every file is heavily commented so a developer new to NestJS can understand what every line does and why.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 📚 Documentation Index
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This README gives you the big picture and quick-start steps.  
+For deep-dives, read the docs in order:
 
-## Project setup
+| # | File | What You'll Learn |
+|---|------|-------------------|
+| 1 | [Core NestJS Concepts](./docs/01-nestjs-core-concepts.md) | Modules, Controllers, Services, Dependency Injection |
+| 2 | [File & Folder Structure](./docs/02-file-structure.md) | What every file does and why it exists |
+| 3 | [Auth Module Deep Dive](./docs/03-auth-module.md) | JWT, Guards, Strategies, Custom Decorators |
+| 4 | [Todo Module Deep Dive](./docs/04-todo-module.md) | DTOs, Entities, TypeORM, User-Scoped CRUD |
+| 5 | [Cross-Module Sharing](./docs/05-cross-module-sharing.md) | How modules export/import features from each other |
 
-```bash
-$ npm install
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| NestJS | ^11 | Backend framework |
+| TypeScript | ^5.7 | Type safety |
+| TypeORM | ^0.3 | ORM for database operations |
+| PostgreSQL | any | Relational database |
+| Passport + JWT | — | Authentication |
+| bcrypt | ^6 | Password hashing |
+| class-validator | ^0.15 | Request body validation |
+| Swagger | ^11 | Auto-generated API docs |
+
+---
+
+## ⚡ Quick Start
+
+### 1. Prerequisites
+
+- Node.js 18+
+- PostgreSQL running locally
+- A database named `crud_demo`
+
+```sql
+-- Run in psql or pgAdmin
+CREATE DATABASE crud_demo;
+CREATE USER umang WITH PASSWORD 'secret123';
+GRANT ALL PRIVILEGES ON DATABASE crud_demo TO umang;
 ```
 
-## Compile and run the project
+### 2. Install Dependencies
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+cd backend
+npm install
 ```
 
-## Run tests
+### 3. Configure Database
+
+Open `src/app.module.ts` and update the TypeORM config:
+
+```typescript
+TypeOrmModule.forRoot({
+  type: 'postgres',
+  host: 'localhost',
+  port: 5432,
+  username: 'your_username',   // ← change this
+  password: 'your_password',   // ← change this
+  database: 'crud_demo',
+  autoLoadEntities: true,
+  synchronize: true,           // ⚠️ dev only — auto-creates tables
+})
+```
+
+### 4. Start the Server
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run start:dev     # Development (watch mode — restarts on file changes)
+npm run start:prod    # Production (runs compiled JS from dist/)
+npm run build         # Compile TypeScript to dist/
 ```
 
-## Deployment
+Server starts on **http://localhost:5000**
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### 5. Explore the API
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Visit **http://localhost:5000/api/docs** for the interactive Swagger UI.
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+---
+
+## 🗂️ Project Structure (Overview)
+
+```
+backend/
+├── src/
+│   ├── main.ts                    # Entry point — bootstraps the app
+│   ├── app.module.ts              # Root module — ties everything together
+│   ├── app.controller.ts          # Root controller (health check)
+│   ├── app.service.ts             # Root service
+│   │
+│   ├── auth/                      # Authentication feature module
+│   │   ├── auth.module.ts         # Module definition + JWT/Passport config
+│   │   ├── auth.controller.ts     # POST /register, POST /login, GET /profile
+│   │   ├── auth.service.ts        # Business logic: register, login, hash passwords
+│   │   ├── jwt.strategy.ts        # Passport JWT strategy (validates tokens)
+│   │   ├── dto/
+│   │   │   ├── register.dto.ts    # Shape + validation for registration data
+│   │   │   └── login.dto.ts       # Shape + validation for login data
+│   │   ├── guards/
+│   │   │   └── jwt-auth.guard.ts  # Route protector (blocks unauthenticated requests)
+│   │   └── decorators/
+│   │       └── get-user.decorator.ts  # @GetUser() — extracts user from JWT
+│   │
+│   ├── todo/                      # Todo feature module
+│   │   ├── todo.module.ts         # Module definition
+│   │   ├── todo.controller.ts     # CRUD route handlers (all protected by JWT)
+│   │   ├── todo.service.ts        # Business logic: user-scoped CRUD operations
+│   │   ├── dto/
+│   │   │   ├── create-todo.dto.ts # Shape + validation for creating todos
+│   │   │   └── update-todo.dto.ts # Shape + validation for updating todos
+│   │   └── entities/
+│   │       └── todo.entity.ts     # Database table definition (todos)
+│   │
+│   └── user/
+│       └── entities/
+│           └── user.entity.ts     # Database table definition (users)
+│
+├── docs/                          # 📖 Learning documentation
+│   ├── 01-nestjs-core-concepts.md
+│   ├── 02-file-structure.md
+│   ├── 03-auth-module.md
+│   ├── 04-todo-module.md
+│   └── 05-cross-module-sharing.md
+│
+├── nest-cli.json                  # NestJS CLI configuration
+├── tsconfig.json                  # TypeScript configuration
+└── package.json                   # Dependencies and scripts
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 🔗 API Endpoints Summary
 
-Check out a few resources that may come in handy when working with NestJS:
+### Auth Routes (Public)
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+| Method | Route | Description |
+|--------|-------|-------------|
+| `POST` | `/api/auth/register` | Register a new user, returns JWT token |
+| `POST` | `/api/auth/login` | Login, returns JWT token |
+| `GET` | `/api/auth/profile` | Get current user profile *(requires token)* |
 
-## Support
+### Todo Routes (Protected — JWT Required)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+| Method | Route | Description |
+|--------|-------|-------------|
+| `POST` | `/api/todos` | Create a new todo |
+| `GET` | `/api/todos` | Get all todos for the logged-in user |
+| `GET` | `/api/todos/:id` | Get a single todo |
+| `PATCH` | `/api/todos/:id` | Update a todo |
+| `DELETE` | `/api/todos/:id` | Delete a todo |
 
-## Stay in touch
+> All `/api/todos` routes require the header:  
+> `Authorization: Bearer <your_jwt_token>`
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
-## License
+## 🔐 Authentication Flow
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```
+1. POST /api/auth/register  →  { name, email, password }
+                            ←  { accessToken, user }
+
+2. Use that token in future requests:
+   GET /api/todos
+   Headers: { Authorization: "Bearer eyJhbGciOi..." }
+
+3. Server validates token → returns user's todos only
+```
+
+---
+
+## 📖 Read the Docs
+
+**New to NestJS?** Start with [Core NestJS Concepts →](./docs/01-nestjs-core-concepts.md)

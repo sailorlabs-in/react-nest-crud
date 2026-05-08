@@ -51,7 +51,7 @@ import { AuthModule } from './auth/auth.module.js';
       synchronize: true,
 
       // Log SQL queries to console (helpful for learning)
-      logging: true,
+      // logging: true,
     }),
 
     // Import our feature modules
